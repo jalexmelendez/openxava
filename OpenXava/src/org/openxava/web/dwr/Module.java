@@ -26,6 +26,8 @@ import org.openxava.web.servlets.*;
  */
 
 public class Module extends DWRBase {
+	
+	final public static ThreadLocal browserPage = new ThreadLocal(); // tmp
 
 	private static Log log = LogFactory.getLog(DWRBase.class); 
 	final private static String MESSAGES_LAST_REQUEST ="xava_messagesLastRequest";
@@ -43,8 +45,9 @@ public class Module extends DWRBase {
 	private boolean firstRequest;
 	private String baseFolder = null;
 	
-	public Result request(HttpServletRequest request, HttpServletResponse response, String application, String module, String additionalParameters, Map values, Map multipleValues, String [] selected, String [] deselected, Boolean firstRequest, String baseFolder) throws Exception {
+	public Result request(HttpServletRequest request, HttpServletResponse response, String application, String module, String additionalParameters, Map values, Map multipleValues, String [] selected, String [] deselected, Boolean firstRequest, String baseFolder, String browserURI) throws Exception {
 		long ini = System.currentTimeMillis();
+		browserPage.set(browserURI); // tmp
 		Result result = new Result(); 
 		result.setApplication(application); 
 		result.setModule(module);
@@ -172,6 +175,7 @@ public class Module extends DWRBase {
 	}
 	 
 	public Map getStrokeActions(HttpServletRequest request, HttpServletResponse response, String application, String module) {
+		// TMP Anular este código es una de las cosas que puedo probar
 		try {
 			ModuleContext context = getContext(request);
 			if (context == null) return Collections.EMPTY_MAP;
@@ -247,7 +251,8 @@ public class Module extends DWRBase {
 		
 	public void requestMultipart(HttpServletRequest request, HttpServletResponse response, String application, String module) throws Exception {
 		if (request.getContentType() != null && request.getContentType().contains("multipart/form-data")) { 
-			request(request, response, application, module, null, null, null, null, null, false, null);
+			// tmp request(request, response, application, module, null, null, null, null, null, false, null);
+			request(request, response, application, module, null, null, null, null, null, false, null, null); // tmp
 			memorizeLastMessages();
 			manager.setResetFormPostNeeded(true);
 		

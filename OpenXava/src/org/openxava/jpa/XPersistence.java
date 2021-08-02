@@ -2,6 +2,7 @@ package org.openxava.jpa;
 
 
 import java.net.*;
+import java.sql.*;
 import java.util.*;
 
 import javax.persistence.*;
@@ -9,10 +10,12 @@ import javax.xml.parsers.*;
 
 import org.apache.commons.logging.*;
 import org.hibernate.*;
+import org.hibernate.internal.*;
 import org.openxava.component.*;
 import org.openxava.hibernate.*;
 import org.openxava.jpa.impl.*;
 import org.openxava.util.*;
+import org.openxava.web.dwr.*;
 import org.w3c.dom.*;
 
 /**
@@ -150,6 +153,9 @@ public class XPersistence {
 			try {
 				if (t.isActive()) {
 					boolean rollbackOnly = t.getRollbackOnly();
+					// tmp ini
+					System.out.println("[XPersistence.commit] schema=" + getDefaultSchema() + ", browserPage=" + Module.browserPage.get()); // tmp
+					// tmp
 					t.commit();
 					if (rollbackOnly) throw new RollbackException(XavaResources.getString("transaction_marked_rollbackOnly")); // Because it's not automatic with Hibernate 5.3.7 
 				}
