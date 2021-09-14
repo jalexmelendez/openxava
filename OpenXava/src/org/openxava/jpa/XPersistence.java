@@ -97,7 +97,9 @@ public class XPersistence {
 	public static EntityManager getManager() {
 		EntityManager s = (EntityManager) currentManager.get();
 		if (s == null || !s.isOpen()) {
+			log.warn("> schema=" + getDefaultSchema() + ", browserPage=" + Module.browserPage.get());
 			s = openManager();
+			log.warn("< schema=" + getDefaultSchema() + ", browserPage=" + Module.browserPage.get());
 		}	
 		return s;
 	}
@@ -154,9 +156,12 @@ public class XPersistence {
 				if (t.isActive()) {
 					boolean rollbackOnly = t.getRollbackOnly();
 					// tmp ini
-					System.out.println("[XPersistence.commit] schema=" + getDefaultSchema() + ", browserPage=" + Module.browserPage.get()); // tmp
+					log.warn("> schema=" + getDefaultSchema() + ", browserPage=" + Module.browserPage.get());
 					// tmp
 					t.commit();
+					// tmp ini
+					log.warn("< schema=" + getDefaultSchema() + ", browserPage=" + Module.browserPage.get());
+					// tmp
 					if (rollbackOnly) throw new RollbackException(XavaResources.getString("transaction_marked_rollbackOnly")); // Because it's not automatic with Hibernate 5.3.7 
 				}
 				else m.flush();
@@ -346,6 +351,7 @@ public class XPersistence {
 	 */
 	public static void reset() {
 		currentPersistenceUnitProperties.set(null);
+		currentManager.set(null); // tmp ESTO SE HA AÑADIDO. PROBANDOLO DESDE 14/9/2021. PUEDE QUE SEA LA SOLUCIÓN. HABRÍA QUE PONERLO TAMBIÉN EN XHibernate	
 	}
 	
 	/**
