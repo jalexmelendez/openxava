@@ -1,8 +1,6 @@
 package org.openxava.jpa;
 
 
-import java.net.*;
-import java.sql.*;
 import java.util.*;
 
 import javax.persistence.*;
@@ -10,13 +8,11 @@ import javax.xml.parsers.*;
 
 import org.apache.commons.logging.*;
 import org.hibernate.*;
-import org.hibernate.internal.*;
 import org.openxava.component.*;
 import org.openxava.hibernate.*;
 import org.openxava.jpa.impl.*;
 import org.openxava.util.*;
 import org.openxava.web.dwr.*;
-import org.w3c.dom.*;
 
 /**
  * Allows to work easily with EJB3 JPA inside OpenXava applications. <p>
@@ -351,7 +347,12 @@ public class XPersistence {
 	 */
 	public static void reset() {
 		currentPersistenceUnitProperties.set(null);
-		currentManager.set(null); // tmp ESTO SE HA AÑADIDO. PROBANDOLO DESDE 14/9/2021. PUEDE QUE SEA LA SOLUCIÓN. HABRÍA QUE PONERLO TAMBIÉN EN XHibernate	
+		// tmp ini
+		// tmp ESTO SE HA AÑADIDO. PROBANDOLO DESDE 9/11/2021. PUEDE QUE SEA LA SOLUCIÓN. HABRÍA QUE PONERLO TAMBIÉN EN XHibernate
+		EntityManager s = (EntityManager) currentManager.get();
+		if (s != null && s.isOpen()) commit();
+		currentManager.set(null); 
+		// tmp fin
 	}
 	
 	/**
